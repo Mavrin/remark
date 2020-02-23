@@ -7,16 +7,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 import loadPolyfills from '@app/common/polyfills';
 
-import { IntlProvider } from 'react-intl';
-import { loadLocale } from './utils/loadLocale';
-
 import { createElement, render } from 'preact';
 import { bindActionCreators } from 'redux';
-import { Provider } from 'react-redux';
 
-import { ConnectedRoot } from '@app/components/root';
-import { UserInfo } from '@app/components/user-info';
 import reduxStore from '@app/store';
+import { App } from './App';
 
 // importing css
 import '@app/components/list-comments';
@@ -65,30 +60,6 @@ async function init(): Promise<void> {
       return memo;
     }, {});
   const locale = params.locale || `en`;
-  const messages = await loadLocale(locale).catch(() => ({}));
   StaticStore.config = await api.getConfig();
-
-  if (params.page === 'user-info') {
-    return render(
-      <IntlProvider locale={locale} messages={messages}>
-        <div id={NODE_ID}>
-          <div className="root root_user-info">
-            <Provider store={reduxStore}>
-              <UserInfo />
-            </Provider>
-          </div>
-        </div>
-      </IntlProvider>,
-      node
-    );
-  }
-
-  render(
-    <IntlProvider locale={locale} messages={messages}>
-      <Provider store={reduxStore}>
-        <ConnectedRoot />
-      </Provider>
-    </IntlProvider>,
-    node
-  );
+  render(<App defaultLocale={locale} NODE_ID={NODE_ID} page={params.page} reduxStore={reduxStore} />, node);
 }

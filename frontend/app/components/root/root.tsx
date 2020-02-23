@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { createElement, Component, FunctionComponent } from 'preact';
+import { createElement, Component } from 'preact';
 import { useSelector } from 'react-redux';
 import b from 'bem-react-helper';
 import { IntlShape, useIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -80,7 +80,8 @@ const boundActions = bindActions({
   updateComment,
 });
 
-type Props = ReturnType<typeof mapStateToProps> & typeof boundActions & { intl: IntlShape };
+type Props = ReturnType<typeof mapStateToProps> &
+  typeof boundActions & { intl: IntlShape; setLocale: (locale: string) => void };
 
 interface State {
   isLoaded: boolean;
@@ -163,6 +164,9 @@ export class Root extends Component<Props, State> {
       const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
       if (data.theme && THEMES.includes(data.theme)) {
         this.props.setTheme(data.theme);
+      }
+      if (data.locale) {
+        this.props.setLocale(data.locale);
       }
     } catch (e) {
       console.error(e); // eslint-disable-line no-console
@@ -351,9 +355,9 @@ export class Root extends Component<Props, State> {
 }
 
 /** Root component connected to redux */
-export const ConnectedRoot: FunctionComponent = () => {
+export const ConnectedRoot = ({ setLocale }: { setLocale: (locale: string) => void }) => {
   const props = useSelector(mapStateToProps);
   const actions = useActions(boundActions);
   const intl = useIntl();
-  return <Root {...props} {...actions} intl={intl} />;
+  return <Root {...props} {...actions} intl={intl} setLocale={setLocale} />;
 };

@@ -81,6 +81,15 @@
         </div>
       </div>
       <p><button id="toggle-theme">Toggle theme</button></p>
+      <p>
+        <label for="change-locale">Change locale:
+          <select name="locale" id="change-locale">
+            <option selected value="en">en</option>
+            <option value="ru">ru</option>
+            <option value="de">de</option>
+          </select>
+        </label>
+      </p>
       <div id="remark42"></div>
     </div>
 
@@ -121,13 +130,19 @@
         window.REMARK42.changeTheme('dark');
       });
 
+      document.getElementById('change-locale').addEventListener('change', function(e) {
+        var select = e.currentTarget
+        var value = select.value;
+        window.REMARK42.changeLocale(value);
+      })
+
       var remark_config = {
         site_id: 'remark',
         host: window.location.origin,
         url: 'https://remark42.com/demo/',
         components: ['embed', 'counter'],
         theme: theme,
-        // locale: "ru"
+        locale: "en"
       };
 
       (function(c, d) {

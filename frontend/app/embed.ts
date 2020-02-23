@@ -43,6 +43,7 @@ function init(): void {
 
   (window as any).REMARK42 = (window as any).REMARK42 || {};
   (window as any).REMARK42.changeTheme = changeTheme;
+  (window as any).REMARK42.changeLocale = changeLocale;
 
   const query = Object.keys(remark_config)
     .map((key: any) => `${encodeURIComponent(key)}=${encodeURIComponent((remark_config as any)[key])}`)
@@ -297,5 +298,9 @@ function init(): void {
 
   function changeTheme(theme: Theme): void {
     iframe.contentWindow!.postMessage(JSON.stringify({ theme }), '*');
+  }
+
+  function changeLocale(locale: string): void {
+    iframe.contentWindow!.postMessage(JSON.stringify({ locale }), '*');
   }
 }
